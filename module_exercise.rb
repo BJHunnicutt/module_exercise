@@ -10,18 +10,21 @@
 ######    EXAMPLE MODULE      #####
 ###################################
 
-  #
-  # module Perimeter
-  #   class Array
+  # # Because it is inside a module, this will not overwrite the default class Array
+  # module Perimeter  # Module (with it's own namespace)
+  #   class Array # Custom class
   #     def initialize
   #       @size = 400
   #     end
   #   end
   # end
   #
+  # # To access our Array class instead of the normal array, specify the module like this:
   # our_array = Perimeter::Array.new
+  # # Normal Array class
   # ruby_array = Array.new
   #
+  # # p is shorthand for
   # p our_array.class
   # p ruby_array.class
   #
@@ -37,6 +40,7 @@
 #DOCUMENTATION
 #https://github.com/stympy/faker#fakerhacker
 
+# # Example of a gem that IS wrapped up in a module
 # require "faker"
 #
 # puts Faker::Hacker.say_something_smart
@@ -54,16 +58,18 @@
 #DOCUMENTATION:
 #https://github.com/kqdreger/traveller
 
+# Example of a gem that IS NOT wrapped up in a module
+
 #Testing out the traveller gem!
+  require 'traveller'
 
-  # require 'traveller'
+  # traveller1 = Traveller.new("Seattle, Minnesota 98101")
+  # p traveller1
   #
-  # trav = Traveller.new("Seattle, Minnesota 98101")
-
   # puts traveller1.city
   # puts traveller1.zip
   #
-  # trav.state = "Washington"
+  # traveller1.state = "Washington"
   #
   # puts traveller1.state
 
@@ -82,12 +88,30 @@
   #   end
   # end
 
-  #Tests to use the Traveller Gem (after my class has been created. )
-    # traveller2 = Traveller.new("Chicago 60611 IL")
-    # puts Traveller.state
+  # #Tests to use the Traveller Gem (after my class has been created. )
+  #   traveller2 = Traveller.new("Chicago 60611 IL")
+  #   puts traveller2.state
 
   #Hmm. It doesn't work. Oh bother.
   #How would we possibly fix this so I don't have to change the name of MY class but still be able to use this gem?
+
+  # module Expedia
+  #   class Traveller
+  #     attr_accessor :name, :email, :location
+  #     def initialize(details_hash)
+  #       @name = details_hash[:name]
+  #       @email = details_hash[:email]
+  #       @location = details_hash[:location]
+  #       puts details_hash
+  #     end
+  #   end
+  # end
+  #
+  # # Cant call another class of the same name inside it, so have to do it here
+  # location = Traveller.new("Seattle, Washington 98101")
+  #
+  # user1 = Expedia::Traveller.new(name: "name", email: "fhdjs@gmail.com", location: location)
+  # puts user1
 
 
 
@@ -97,51 +121,57 @@
 
   #A Ruby constant is like a variable, except that its value is supposed to remain constant for the duration of the program. The Ruby interpreter does not actually enforce the constancy of constants, but it does issue a warning if a program changes the value of a constant
 
-  #### NOTES ###
+  #### NOTES ####
 
   # Constants defined within a class or module may be accessed anywhere within the class or module.
 
   # Outside the class or module, they may be accessed using the scope operator, :: prefixed by an expression that returns the appropriate class or module.
 
   # Constants defined outside any class or module may be accessed as it is or by using the scope operator with no prefix.
-  # Constants may not be defined in methods.
+
+  # ** Constants may not be defined in methods. **
 
   # Constants may be added to existing classes and modules from the outside by using the class or module name and the scope operator before the constant name.
 
 
 
-      #   module Blackjack
-      #     MAX_SCORE = 21
-      #     module Player
-      #         MAX_PLAYERS = 2
-      #         class Player
-      #           def initialize
-      #           end
-      #         end
-      #     end
-      #     module Card
-      #         MAX_VALUE = 13
-      #         class Card
-      #           def get_max_value()
-      #               return MAX_VALUE
-      #           end
-      #         end
-      #     end
-      # end
-      #
-      # MAX_SCORE = 50
-      # MAX_PLAYERS = 4
-      # MAX_VALUE = 21
-      #
-      # puts "MAX_SCORE - #{MAX_SCORE}"
-      # puts "Blackjack::MAX_SCORE - #{Blackjack::MAX_SCORE}"
-      #
-      # puts
-      #
-      # puts "MAX_Players - #{MAX_PLAYERS}"
-      # puts "Blackjack::Player::MAX_Players - #{Blackjack::Player::MAX_PLAYERS}"
-      #
-      # puts
-      #
-      # puts "MAX_VALUE - #{MAX_VALUE}"
-      # puts "Blackjack::Card::get_max_value -  #{Blackjack::Card::Card.new().get_max_value()}"`
+        module Blackjack
+          MAX_SCORE = 21  # Constants are all caps with underscore between words
+          non_constant_var = 429
+          CONSTANT_VAR = 100
+          module Player
+              MAX_PLAYERS = 2
+              class Player
+                def initialize
+                end
+              end
+          end
+          module Card
+              MAX_VALUE = 13
+              class Card
+                def get_max_value()
+                    return MAX_VALUE
+                end
+              end
+          end
+      end
+
+      MAX_SCORE = 50
+      MAX_PLAYERS = 4
+      MAX_VALUE = 21
+
+      puts "MAX_SCORE - #{MAX_SCORE}"
+      puts "Blackjack::MAX_SCORE - #{Blackjack::MAX_SCORE}"
+
+      puts
+
+      puts "MAX_Players - #{MAX_PLAYERS}"
+      puts "Blackjack::Player::MAX_Players - #{Blackjack::Player::MAX_PLAYERS}"
+
+      puts
+
+      puts "MAX_VALUE - #{MAX_VALUE}"
+      puts "Blackjack::Card::get_max_value - #{Blackjack::Card::Card.new().get_max_value()}"
+
+      puts "A constant - #{Blackjack::CONSTANT_VAR}"
+      puts "Not a constant - #{Blackjack::non_constant_var}"
